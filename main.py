@@ -13,16 +13,15 @@ load_dotenv()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 
-@st.cache_resource #Only runs once
+@st.cache_resource(show_spinner=False) #Only runs once
 def get_retriever():
-    with st.spinner("Loading..."):
-        # Loading the saved embeddings 
-        embedding_model = SentenceTransformerEmbeddings(model_name="all-mpnet-base-v2")
-        loaded_vectors=FAISS.load_local("vectors", embedding_model)
+    # Loading the saved embeddings 
+    embedding_model = SentenceTransformerEmbeddings(model_name="all-mpnet-base-v2")
+    loaded_vectors=FAISS.load_local("vectors", embedding_model)
 
-        faiss_retriever = loaded_vectors.as_retriever(search_kwargs={"k":2})
-    
-        return faiss_retriever
+    faiss_retriever = loaded_vectors.as_retriever(search_kwargs={"k":2})
+
+    return faiss_retriever
 
 def get_chain():
     PROMPT_TEMPLATE = '''
@@ -43,7 +42,8 @@ def get_chain():
     custom_prompt = PromptTemplate(template=PROMPT_TEMPLATE,
                                 input_variables=input_variables)
 
-    faiss_retriever = get_retriever()
+    with st.spinner("Loading..."):
+        faiss_retriever = get_retriever()
 
     llm = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=GOOGLE_API_KEY, temperature=0.1)
 
@@ -65,7 +65,7 @@ def generate_refined_query(new_query, chat_history):
     
     prompt = """
                 I have built a chatbot and I need help with rewriting the user query.
-                First asses whether the "New User Query" is complete and makes sense independent of the chat history.
+                First assess whether the "New User Query" is complete and makes sense independent of the chat history.
                 If it does, simply return the query as-is without making any change to it.
                 If it doesn't, rewrite the new user query by filling in the missing information from chat history 
                 such that the re-written query is complete and makes sense independent of the chat history.
@@ -154,7 +154,7 @@ prompt = st.chat_input("Enter your question here")
 qa_with_sources_chain = get_chain()
 
 if prompt:
-    with st.spinner("Generating......"):
+    with st.spinner("Generating..."):
         output=query_index(qa_with_sources_chain, query=prompt, chat_history = st.session_state["chat_history"])
         st.session_state["chat_answers_history"].append(output['result'])
         st.session_state["user_prompt_history"].append(prompt)
