@@ -2,7 +2,7 @@
 
 This chatbot contains 2 parts, the index and the chat model. For the index, SentenceTransformers from HuggingFace have been used.
 
-<a>Video tutorial</a>
+<a href="https://youtu.be/Yopg6vrtCOg">Video tutorial</a>
 
 To install all the requirements, run the following command in the terminal:
 
@@ -20,4 +20,4 @@ Both of them use SentenceTransformers to create the embeddings, which are free a
 
 ### Chat bot
 
-All code for the chatbot is in main.py. Google's Gemini model is used, which is free up to 60 queries per minute. However, an API key is needed and can be acquired from <a href="https://aistudio.google.com/app/prompts/new_chat?utm_source=agd&utm_medium=referral&utm_campaign=core-cta&utm_content=">Google AI Studio</a> 
+All code for the chatbot is in main.py. Google's Gemini model is used, which is free up to 60 queries per minute. However, an API key is needed and can be acquired from <a href="https://aistudio.google.com/app/apikey">Google AI Studio</a> 
