@@ -45,7 +45,7 @@ def get_chain():
     with st.spinner("Loading..."):
         faiss_retriever = get_retriever()
 
-    llm = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=GOOGLE_API_KEY, temperature=0.1)
+    llm = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=GOOGLE_API_KEY, temperature=0.5)
 
     #Finds the relevant chunks using the faiss_retriver and returns the LLM response
     qa_with_sources_chain = RetrievalQA.from_chain_type(
